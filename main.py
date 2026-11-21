@@ -22,7 +22,7 @@ def main():
                 elif op1 == 1:
                     cadastrar_paciente()
                 elif op1 == 2:
-                    cpf = int(input("Digite o cpf do paciente para a verificação: "))
+                    cpf = input("Digite o cpf do paciente para a verificação: ")
                     buscar_paciente_cpf(cpf)
                 elif op1 == 3:
                     listar_pacientes()
@@ -40,7 +40,7 @@ def main():
                 elif op2 == 1:
                     cadastrar_funcionario()
                 elif op2 == 2:
-                    crm = int(input("Digite o crm do funcionário para a verificação: "))
+                    crm = input("Digite o crm do funcionário para a verificação: ")
                     buscar_funcionario_crm(crm)
                 elif op2 == 3:
                     listar_funcionarios()
@@ -61,7 +61,7 @@ def main():
                     cod = input("Digite o código: ")
                     buscar_vacina_codigo(cod)
                 elif op3 == 3:
-                    cpf_pac = int(input("Digite o cpf do paciente para listar registro das vacinas: "))
+                    cpf_pac = input("Digite o cpf do paciente para listar registro das vacinas: ")
                     listar_vacina_cpf_paciente(cpf_pac)
                 elif op3 == 4:
                     listar_todos_registros()
