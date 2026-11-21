@@ -1,4 +1,6 @@
 ARQUIVO = "pacientes.txt"
+ARQUIVO_FUNC = "funcionarios.txt"
+
 
 def cadastrar_paciente():
     print("BEM- VINDO AO CADASTRAMENTO")
@@ -59,13 +61,61 @@ def listar_pacientes():
 
 
 def cadastrar_funcionario():
-    pass
+    print("---- CADASTRANDO FUNCIONÁRIO -----")
+    try:
+        crm = input("Digite o CRM do funcionário: ").strip()
+        
+        if buscar_funcionario_crm(crm):
+            print("ERRO! Funcionáro já está cadastrado na base!")
+            return
+        
+        nome = input("Digite o nome do funcionário: ").strip()
+        cargo = input("Digite o cargo do funcionário: ").strip()
+        
+        
+        with open(ARQUIVO_FUNC, "a", encoding="utf-8") as arq:
+            arq.write(f"{nome} - {crm} - {cargo}\n")
+            
+        print("Funcionário cadastrado com sucesso!")
+        
+    except OSError:
+        print("ERRO! Não foi possível acessar o arquivo.") 
 
 def buscar_funcionario_crm(crm):
-    pass
+    try:
+        with open(ARQUIVO_FUNC, "r", encoding="utf-8") as arq:
+            for linha in arq:
+                dados = linha.strip().split(" - ")
+                
+                if dados[1].strip() == crm:
+                    print(f"CRM pertencente à: {dados[0]}")
+                    return dados
+                
+                
+    except FileNotFoundError:
+        return None
+         
+    
+    return None
 
 def listar_funcionarios():
-    pass
+    print("---- LISTANDO TODOS OS FUNCIONÁRIOS ----")
+
+    try:
+        with open(ARQUIVO_FUNC, "r", encoding="utf-8") as arq:
+            linhas = arq.readlines()
+            
+            if len(linhas) == 0:
+                print("Nenhum funcionário cadastrado!")
+                return
+            
+            for funcionario in linhas:
+                dados = funcionario.strip().split(" - ")
+                
+                print(f"Nome: {dados[0]} - CRM: {dados[1]} - Cargo: {dados[2]}")
+                
+    except FileNotFoundError:
+        print("Nenhum funcionário cadastrado!")  
 
 
 
