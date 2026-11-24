@@ -5,5 +5,12 @@
         "CPF": "0123456",
         "PACIENTE": "Elmão",
         "FUNCIONARIO": "Elminho"
+    },
+    {
+        "CODIGO": "99999999",
+        "TIPO": "COVID-19",
+        "CPF": "123",
+        "PACIENTE": "Sabrina",
+        "FUNCIONARIO": "Elminho"
     }
 ]

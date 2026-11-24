@@ -83,6 +83,7 @@ def cadastrar_funcionario():
     except OSError:
         print("ERRO! Não foi possível acessar o arquivo.") 
 
+
 def buscar_funcionario_crm(crm):
     try:
         with open(ARQUIVO_FUNC, "r", encoding="utf-8") as arq:
@@ -166,20 +167,60 @@ def buscar_vacina_codigo(cod):
         with open(ARQUIVO_VACINAS, "r", encoding="utf-8") as arq:
             vacinas = json.load(arq)
 
-    except FileNotFoundError, json.JSONDecodeError:
+    except (FileNotFoundError, json.JSONDecodeError):
         print("Nenhuma vacina cadastrada...")
         return
 
     for v in vacinas:
         if v["CODIGO"] == cod.strip():
-            print(f"Código: {v['CODIGO']} - Tipo: {v['TIPO']} - CPF: {v['CPF']} - Paciente: {v['PACIENTE']} - Funcionário: {['FUNCIONARIO']}")
+            print(f"Código: {v['CODIGO']} - Tipo: {v['TIPO']} - CPF: {v['CPF']} - Paciente: {v['PACIENTE']} - Funcionário: {v['FUNCIONARIO']}")
             return
         
                 
     print("Vacina não encontrada na base!")
 
 def listar_vacina_cpf_paciente(cpf_pac):
-    pass
+    print("--- LISTAR VACINAS PELO CPF DO PACIENTE ---") 
+
+    try:
+        with open(ARQUIVO_VACINAS, "r", encoding="utf-8") as arq:
+            vacinas = json.load(arq)
+
+    except FileNotFoundError:
+        print("Nenhuma vacinação cadastrada!")
+        return
+
+    except json.JSONDecodeError:
+        print("Arquivo de vacinações vazio ou inválido!")
+        return
+
+    encontrou = False
+
+    for v in vacinas:
+        if v["CPF"] == cpf_pac.strip():
+
+            print(f"Código: {v['CODIGO']} - Tipo: {v['TIPO']} - CPF: {v['CPF']} - Paciente: {v['PACIENTE']} - Funcionário: {v['FUNCIONARIO']}")
+            encontrou = True
+
+    if not encontrou:
+        print("Nenhuma vacinação encontrada para esse paciente!")
 
 def listar_todos_registros():
-    pass
+    print("--- LISTANDO TODOS OS REGISTROS DA VACINA ---")
+    try:
+        with open(ARQUIVO_VACINAS, "r", encoding="utf-8") as arq:
+            registros = json.load(arq) #ler e converte os arquivos. Dados estão em json e a função load converte para dicionário
+    except FileNotFoundError:
+        print("Nenhuma vacinação cadastrada!")
+        return
+    
+    except json.JSONDecodeError:
+        print("Arquivo de vacinações vazio ou inválido!")
+        return
+
+    if not registros:
+        print("Nenhuma vacinação cadastrada!")
+        return
+
+    for r in registros:
+        print(f"Código: {r['CODIGO']} - Tipo: {r['TIPO']} - CPF: {r['CPF']} - Paciente: {r['PACIENTE']} - Funcionário: {r['FUNCIONARIO']}")
