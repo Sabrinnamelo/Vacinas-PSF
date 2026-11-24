@@ -46,7 +46,7 @@ def listar_pacientes():
 
     try:
         with open(ARQUIVO, "r", encoding="utf-8") as arq:
-            linhas = arq.readlines()
+            linhas = arq.readlines() # transforma o conteúdo em uma lista
 
             if len(linhas) == 0:
                 print("Nenhum paciente cadastrado!")
@@ -63,25 +63,37 @@ def listar_pacientes():
 
 
 def cadastrar_funcionario():
-    print("---- CADASTRANDO FUNCIONÁRIO -----")
+    print("---- CADASTRANDO FUNCIONÁRIO ----")
+
     try:
         crm = input("Digite o CRM do funcionário: ").strip()
-        
+
         if buscar_funcionario_crm(crm):
-            print("ERRO! Funcionáro já está cadastrado na base!")
+            print("ERRO! Funcionário já está cadastrado na base!")
             return
-        
+
         nome = input("Digite o nome do funcionário: ").strip()
-        cargo = input("Digite o cargo do funcionário: ").strip()
-        
-        
+        cpf = input("Digite o CPF do funcionário: ").strip()
+        contato = input("Digite um contato [telefone ou e-mail]: ").strip()
+        funcao = input("Digite a função [Agente de saúde ou Enfermeiro(a)]: ").strip()
+
+        try:
+            with open(ARQUIVO_FUNC, "r", encoding="utf-8") as arq:
+                for linha in arq:
+                    dados = linha.strip().split(" - ")
+                    print("ERRO! CPF já cadastrado na base!")
+                    return
+
+        except FileNotFoundError:
+            print("Não encontrado!")
+
         with open(ARQUIVO_FUNC, "a", encoding="utf-8") as arq:
-            arq.write(f"{nome} - {crm} - {cargo}\n")
-            
+            arq.write(f"{nome} - {crm} - {cpf} - {contato} - {funcao}\n")
+
         print("Funcionário cadastrado com sucesso!")
-        
+
     except OSError:
-        print("ERRO! Não foi possível acessar o arquivo.") 
+        print("ERRO! Não foi possível acessar o arquivo.")
 
 
 def buscar_funcionario_crm(crm):
@@ -101,24 +113,25 @@ def buscar_funcionario_crm(crm):
     
     return None
 
+
 def listar_funcionarios():
     print("---- LISTANDO TODOS OS FUNCIONÁRIOS ----")
 
     try:
         with open(ARQUIVO_FUNC, "r", encoding="utf-8") as arq:
             linhas = arq.readlines()
-            
-            if len(linhas) == 0:
-                print("Nenhum funcionário cadastrado!")
-                return
-            
-            for funcionario in linhas:
-                dados = funcionario.strip().split(" - ")
-                
-                print(f"Nome: {dados[0]} - CRM: {dados[1]} - Cargo: {dados[2]}")
-                
+
+        if len(linhas) == 0:
+            print("Nenhum funcionário cadastrado!")
+            return
+
+        for funcionario in linhas:
+            dados = funcionario.strip().split(" - ")
+
+            print(f"Nome: {dados[0]} - CRM: {dados[1]} - CPF: {dados[2]} - Contato: {dados[3]} - Função: {dados[4]}")
+
     except FileNotFoundError:
-        print("Nenhum funcionário cadastrado!")  
+        print("Nenhum funcionário cadastrado!")
 
 
 def registrar_vacinacao():
