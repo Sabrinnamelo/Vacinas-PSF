@@ -37,7 +37,6 @@ def buscar_paciente_cpf(cpf):
 
     except FileNotFoundError:
         return None
-
     return None
 
 
@@ -46,7 +45,7 @@ def listar_pacientes():
 
     try:
         with open(ARQUIVO, "r", encoding="utf-8") as arq:
-            linhas = arq.readlines() # transforma o conteúdo em uma lista
+            linhas = arq.readlines()    #transforma o conteúdo em uma lista
 
             if len(linhas) == 0:
                 print("Nenhum paciente cadastrado!")
@@ -64,7 +63,6 @@ def listar_pacientes():
 
 def cadastrar_funcionario():
     print("---- CADASTRANDO FUNCIONÁRIO ----")
-
     try:
         crm = input("Digite o CRM do funcionário: ").strip()
 
@@ -77,25 +75,14 @@ def cadastrar_funcionario():
         contato = input("Digite um contato [telefone ou e-mail]: ").strip()
         funcao = input("Digite a função [Agente de saúde ou Enfermeiro(a)]: ").strip()
 
-        try:
-            with open(ARQUIVO_FUNC, "r", encoding="utf-8") as arq:
-                for linha in arq:
-                    dados = linha.strip().split(" - ")
-                    print("ERRO! CPF já cadastrado na base!")
-                    return
-
-        except FileNotFoundError:
-            print("Não encontrado!")
-
         with open(ARQUIVO_FUNC, "a", encoding="utf-8") as arq:
             arq.write(f"{nome} - {crm} - {cpf} - {contato} - {funcao}\n")
 
         print("Funcionário cadastrado com sucesso!")
 
     except OSError:
-        print("ERRO! Não foi possível acessar o arquivo.")
-
-
+           print("ERRO! Não foi possível acessar o arquivo.")
+   
 def buscar_funcionario_crm(crm):
     try:
         with open(ARQUIVO_FUNC, "r", encoding="utf-8") as arq:
@@ -110,9 +97,7 @@ def buscar_funcionario_crm(crm):
     except FileNotFoundError:
         return None
          
-    
     return None
-
 
 def listar_funcionarios():
     print("---- LISTANDO TODOS OS FUNCIONÁRIOS ----")
