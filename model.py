@@ -1,6 +1,8 @@
+import json
+
 ARQUIVO = "pacientes.txt"
 ARQUIVO_FUNC = "funcionarios.txt"
-
+ARQUIVO_VACINAS = "vacinas.json"
 
 def cadastrar_paciente():
     print("BEM- VINDO AO CADASTRAMENTO")
@@ -118,12 +120,63 @@ def listar_funcionarios():
         print("Nenhum funcionário cadastrado!")  
 
 
-
 def registrar_vacinacao():
-    pass
+    print("---- REGISTRAR VACINAÇÃO ----")
+    try:
+        cpf = input("Digite o CPF do paciente: ").strip()
+        paciente = buscar_paciente_cpf(cpf)
+        if paciente is None:
+            print("ERRO! Paciente não encontrado na base! Realize o cadastro!")
+            return
+
+        crm = input("Digite o CRM do funcionário: ").strip()
+        funcionario = buscar_funcionario_crm(crm)
+        if funcionario is None:
+            print("ERRO! Funcionário não encontrado na base! Realize o cadastro!")
+            return    
+
+        try:
+            with open(ARQUIVO_VACINAS, "r", encoding="utf-8") as arq:
+                vacinas = json.load(arq)
+        except FileNotFoundError:
+            vacinas = []
+        except json.JSONDecodeError:
+            vacinas = []            
+
+        codigo = input("Digite o código da vacina: ").strip()
+        for v in vacinas:
+            if v["CODIGO"] == codigo:
+                print("ERRO! Já existe uma vacina com esse código...")
+                return
+        tipo = input("Digite o tipo da vacina [ex: Gripe, Sarampo, COVID...]: ")
+        vacinas.append({"CODIGO": codigo, "TIPO": tipo, "CPF": cpf, "PACIENTE": paciente[0], "FUNCIONARIO": funcionario[0]})
+
+
+        with open(ARQUIVO_VACINAS, "w", encoding="utf-8") as arq:
+            json.dump(vacinas, arq, indent=4, ensure_ascii=False)
+        print("Vacinação registrada com sucesso!")
+
+    except OSError:
+        print("ERRO! Não foi possível acessar o arquivo.")        
 
 def buscar_vacina_codigo(cod):
-    pass
+    print("--- BUSCANDO VACINA ---")
+
+    try:
+        with open(ARQUIVO_VACINAS, "r", encoding="utf-8") as arq:
+            vacinas = json.load(arq)
+
+    except FileNotFoundError, json.JSONDecodeError:
+        print("Nenhuma vacina cadastrada...")
+        return
+
+    for v in vacinas:
+        if v["CODIGO"] == cod.strip():
+            print(f"Código: {v['CODIGO']} - Tipo: {v['TIPO']} - CPF: {v['CPF']} - Paciente: {v['PACIENTE']} - Funcionário: {['FUNCIONARIO']}")
+            return
+        
+                
+    print("Vacina não encontrada na base!")
 
 def listar_vacina_cpf_paciente(cpf_pac):
     pass
