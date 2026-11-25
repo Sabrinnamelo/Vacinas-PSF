@@ -1,6 +1,6 @@
 import json
 
-ARQUIVO = "pacientes.txt"
+ARQUIVO_PAC = "pacientes.txt"
 ARQUIVO_FUNC = "funcionarios.txt"
 ARQUIVO_VACINAS = "vacinas.json"
 
@@ -16,7 +16,7 @@ def cadastrar_paciente():
         nome = input("Digite o nome do paciente: ").strip()
         contato = input("Digite um contato [telefone ou e-mail]: ").strip()
 
-        with open(ARQUIVO, "a", encoding="utf-8") as arq: 
+        with open(ARQUIVO_PAC, "a", encoding="utf-8") as arq: 
             arq.write(f"{nome} - {cpf} -  {contato}\n")
 
         print("Paciente cadastrado com sucesso!")
@@ -27,7 +27,7 @@ def cadastrar_paciente():
 
 def buscar_paciente_cpf(cpf):
     try:
-        with open(ARQUIVO, "r", encoding="utf-8") as arq:
+        with open(ARQUIVO_PAC, "r", encoding="utf-8") as arq:
             for linha in arq:
                 dados = linha.strip().split(" - ")
 
@@ -35,17 +35,19 @@ def buscar_paciente_cpf(cpf):
                     print(f"CPF pertencente à: {dados[0]}")                    
                     return dados
 
-    except FileNotFoundError:
+        print("Nenhum paciente encontrado com o CPF informado!")
         return None
-    return None
+             
+    except FileNotFoundError:
+        print("Arquivo de paciente não encontrado!")
 
 
 def listar_pacientes():
     print("---- LISTANDO TODOS OS PACIENTES ----")
 
     try:
-        with open(ARQUIVO, "r", encoding="utf-8") as arq:
-            linhas = arq.readlines()    #transforma o conteúdo em uma lista
+        with open(ARQUIVO_PAC, "r", encoding="utf-8") as arq:
+            linhas = arq.readlines()   
 
             if len(linhas) == 0:
                 print("Nenhum paciente cadastrado!")
@@ -57,7 +59,7 @@ def listar_pacientes():
                 print(f"Nome: {dados[0]} - CPF: {dados[1]} - Contato: {dados[2]}")
 
     except FileNotFoundError:
-        print("Nenhum paciente cadastrado!")        
+        print("ERRO! Não foi possível acessar o arquivo.")
 
 
 
@@ -81,7 +83,7 @@ def cadastrar_funcionario():
         print("Funcionário(a) cadastrado com sucesso!")
 
     except OSError:
-           print("ERRO! Não foi possível acessar o arquivo.")
+        print("ERRO! Não foi possível acessar o arquivo.")
    
 def buscar_funcionario_crm(crm):
     try:
@@ -93,12 +95,12 @@ def buscar_funcionario_crm(crm):
                     print(f"CRM pertencente à: {dados[0]}")
                     return dados
                 
-                
-    except FileNotFoundError:
+        print("Funcionário não encontrado com o CRM informado!")
         return None
-         
-    return None
-
+    
+    except FileNotFoundError:
+        print("Arquivo de funcionários não encontrado!")
+    
 def listar_funcionarios():
     print("---- LISTANDO TODOS OS FUNCIONÁRIOS ----")
 
@@ -116,7 +118,7 @@ def listar_funcionarios():
             print(f"Nome: {dados[0]} - CRM: {dados[1]} - CPF: {dados[2]} - Contato: {dados[3]} - Função: {dados[4]}")
 
     except FileNotFoundError:
-        print("Nenhum funcionário cadastrado!")
+        print("ERRO! Não foi possível acessar o arquivo.")
 
 
 def registrar_vacinacao():
@@ -140,7 +142,8 @@ def registrar_vacinacao():
         except FileNotFoundError:
             vacinas = []
         except json.JSONDecodeError:
-            vacinas = []            
+            print("ERRO! Arquivo de vacinações inválido!")
+            return           
 
         codigo = "V" + str(len(vacinas) + 1)
         tipo = input("Digite o tipo da vacina [ex: Gripe, Sarampo, COVID...]: ")
@@ -161,18 +164,22 @@ def buscar_vacina_codigo(cod):
         with open(ARQUIVO_VACINAS, "r", encoding="utf-8") as arq:
             vacinas = json.load(arq)
 
-    except (FileNotFoundError, json.JSONDecodeError):
-        print("Nenhuma vacina cadastrada...")
+    except FileNotFoundError:
+        print("Nenhuma vacina cadastrada!")
+        return
+
+    except json.JSONDecodeError:
+        print("Arquivo de vacinações vazio ou inválido!")
         return
 
     for v in vacinas:
         if v["CODIGO"] == cod.strip():
             print(f"Código: {v['CODIGO']} - Tipo: {v['TIPO']} - CPF: {v['CPF']} - Paciente: {v['PACIENTE']} - Funcionário: {v['FUNCIONARIO']}")
             return
-        
-                
+
     print("Vacina não encontrada na base!")
 
+    
 def listar_vacina_cpf_paciente(cpf_pac):
     print("--- LISTAR VACINAS PELO CPF DO PACIENTE ---") 
 
@@ -196,23 +203,25 @@ def listar_vacina_cpf_paciente(cpf_pac):
     except json.JSONDecodeError:
         print("Arquivo de vacinações vazio ou inválido!")
 
+
 def listar_todos_registros():
     print("--- LISTANDO TODOS OS REGISTROS DA VACINA ---")
+
     try:
         with open(ARQUIVO_VACINAS, "r", encoding="utf-8") as arq:
-            registros = json.load(arq) #ler e converte os arquivos. Dados estão em json e a função load converte para dicionário
+            registros = json.load(arq)
 
-    if not registros:
-        print("Nenhuma vacinação cadastrada!")
-        return
+        if not registros:
+            print("Nenhuma vacinação cadastrada!")
+            return
 
-    for r in registros:
-        print(f"Código: {r['CODIGO']} - Tipo: {r['TIPO']} - CPF: {r['CPF']} - Paciente: {r['PACIENTE']} - Funcionário: {r['FUNCIONARIO']}")
-        
+        for r in registros:
+            print(f"Código: {r['CODIGO']} - Tipo: {r['TIPO']} - CPF: {r['CPF']} - Paciente: {r['PACIENTE']} - Funcionário: {r['FUNCIONARIO']}")
+
     except FileNotFoundError:
-        print("Nenhuma vacinação cadastrada!")
-        return
-    
+        print("ERRO ao acessar o arquivo!")
+        
     except json.JSONDecodeError:
         print("Arquivo de vacinações vazio ou inválido!")
-        return    
+        
+    
