@@ -12,5 +12,19 @@
         "CPF": "123",
         "PACIENTE": "Sabrina",
         "FUNCIONARIO": "Elminho"
+    },
+    {
+        "CODIGO": "V3",
+        "TIPO": "Gripe",
+        "CPF": "0123456",
+        "PACIENTE": "Elmão",
+        "FUNCIONARIO": "Elminho"
+    },
+    {
+        "CODIGO": "V4",
+        "TIPO": "Sarampo",
+        "CPF": "456789",
+        "PACIENTE": "Catarina",
+        "FUNCIONARIO": "Constantino"
     }
 ]

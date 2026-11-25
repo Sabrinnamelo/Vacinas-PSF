@@ -62,23 +62,23 @@ def listar_pacientes():
 
 
 def cadastrar_funcionario():
-    print("---- CADASTRANDO FUNCIONÁRIO ----")
+    print("---- CADASTRANDO FUNCIONÁRIO(A) ----")
     try:
-        crm = input("Digite o CRM do funcionário: ").strip()
+        crm = input("Digite o CRM do(a) funcionário(a): ").strip()
 
         if buscar_funcionario_crm(crm):
-            print("ERRO! Funcionário já está cadastrado na base!")
+            print("ERRO! Funcionário(a) já está cadastrado na base!")
             return
 
-        nome = input("Digite o nome do funcionário: ").strip()
-        cpf = input("Digite o CPF do funcionário: ").strip()
+        nome = input("Digite o nome do funcionário(a): ").strip()
+        cpf = input("Digite o CPF do funcionário(a): ").strip()
         contato = input("Digite um contato [telefone ou e-mail]: ").strip()
         funcao = input("Digite a função [Agente de saúde ou Enfermeiro(a)]: ").strip()
 
         with open(ARQUIVO_FUNC, "a", encoding="utf-8") as arq:
             arq.write(f"{nome} - {crm} - {cpf} - {contato} - {funcao}\n")
 
-        print("Funcionário cadastrado com sucesso!")
+        print("Funcionário(a) cadastrado com sucesso!")
 
     except OSError:
            print("ERRO! Não foi possível acessar o arquivo.")
@@ -128,7 +128,7 @@ def registrar_vacinacao():
             print("ERRO! Paciente não encontrado na base! Realize o cadastro!")
             return
 
-        crm = input("Digite o CRM do funcionário: ").strip()
+        crm = input("Digite o CRM do funcionário(a): ").strip()
         funcionario = buscar_funcionario_crm(crm)
         if funcionario is None:
             print("ERRO! Funcionário não encontrado na base! Realize o cadastro!")
@@ -142,11 +142,7 @@ def registrar_vacinacao():
         except json.JSONDecodeError:
             vacinas = []            
 
-        codigo = input("Digite o código da vacina: ").strip()
-        for v in vacinas:
-            if v["CODIGO"] == codigo:
-                print("ERRO! Já existe uma vacina com esse código...")
-                return
+        codigo = "V" + str(len(vacinas) + 1)
         tipo = input("Digite o tipo da vacina [ex: Gripe, Sarampo, COVID...]: ")
         vacinas.append({"CODIGO": codigo, "TIPO": tipo, "CPF": cpf, "PACIENTE": paciente[0], "FUNCIONARIO": funcionario[0]})
 
@@ -184,37 +180,27 @@ def listar_vacina_cpf_paciente(cpf_pac):
         with open(ARQUIVO_VACINAS, "r", encoding="utf-8") as arq:
             vacinas = json.load(arq)
 
+        encontrou = False
+
+        for v in vacinas:
+            if v["CPF"] == cpf_pac.strip():
+                print(f"Código: {v['CODIGO']} - Tipo: {v['TIPO']} - CPF: {v['CPF']} - Paciente: {v['PACIENTE']} - Funcionário: {v['FUNCIONARIO']}")
+                encontrou = True
+
+        if not encontrou:
+            print("Nenhuma vacinação encontrada para esse paciente!")
+
     except FileNotFoundError:
         print("Nenhuma vacinação cadastrada!")
-        return
 
     except json.JSONDecodeError:
         print("Arquivo de vacinações vazio ou inválido!")
-        return
-
-    encontrou = False
-
-    for v in vacinas:
-        if v["CPF"] == cpf_pac.strip():
-
-            print(f"Código: {v['CODIGO']} - Tipo: {v['TIPO']} - CPF: {v['CPF']} - Paciente: {v['PACIENTE']} - Funcionário: {v['FUNCIONARIO']}")
-            encontrou = True
-
-    if not encontrou:
-        print("Nenhuma vacinação encontrada para esse paciente!")
 
 def listar_todos_registros():
     print("--- LISTANDO TODOS OS REGISTROS DA VACINA ---")
     try:
         with open(ARQUIVO_VACINAS, "r", encoding="utf-8") as arq:
             registros = json.load(arq) #ler e converte os arquivos. Dados estão em json e a função load converte para dicionário
-    except FileNotFoundError:
-        print("Nenhuma vacinação cadastrada!")
-        return
-    
-    except json.JSONDecodeError:
-        print("Arquivo de vacinações vazio ou inválido!")
-        return
 
     if not registros:
         print("Nenhuma vacinação cadastrada!")
@@ -222,3 +208,11 @@ def listar_todos_registros():
 
     for r in registros:
         print(f"Código: {r['CODIGO']} - Tipo: {r['TIPO']} - CPF: {r['CPF']} - Paciente: {r['PACIENTE']} - Funcionário: {r['FUNCIONARIO']}")
+        
+    except FileNotFoundError:
+        print("Nenhuma vacinação cadastrada!")
+        return
+    
+    except json.JSONDecodeError:
+        print("Arquivo de vacinações vazio ou inválido!")
+        return    
