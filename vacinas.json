@@ -1,0 +1,9 @@
+[
+    {
+        "CODIGO": "V1",
+        "TIPO": "Gripe",
+        "CPF": "123",
+        "PACIENTE": "Sabrina",
+        "FUNCIONARIO": "Luiz"
+    }
+]
