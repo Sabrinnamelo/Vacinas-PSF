@@ -35,7 +35,7 @@ def buscar_paciente_cpf(cpf):
                     print(f"CPF pertencente à: {dados[0]}")                    
                     return dados
 
-        print("Nenhum paciente encontrado com o CPF informado!")
+        print("Nenhum paciente encontrado com o CPF informado! Realize o cadastro:")
         return None
              
     except FileNotFoundError:
@@ -95,7 +95,7 @@ def buscar_funcionario_crm(crm):
                     print(f"CRM pertencente à: {dados[0]}")
                     return dados
                 
-        print("Funcionário não encontrado com o CRM informado!")
+        print("Funcionário não encontrado com o CRM informado! Realize o cadastro:")
         return None
     
     except FileNotFoundError:
